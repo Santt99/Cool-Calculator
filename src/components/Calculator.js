@@ -30,52 +30,47 @@ class Calculator extends React.Component {
     const history = this.state.history;
     const current = history[history.length - 1];
     const currentOperation = current.operation;
+    let newHistoryValue = null;
     if (type === "update") {
-      this.setState({
-        history: history.concat({ operation: currentOperation + value })
-      });
+      newHistoryValue = history.concat({ operation: currentOperation + value });
     } else if (type === "delete") {
       if (history.length > 1) {
         history.pop();
-        this.setState({
-          history: history
-        });
+        newHistoryValue = history;
       } else {
-        this.setState({
-          history: [{ operation: "" }]
-        });
+        newHistoryValue = [{ operation: "" }];
       }
     } else if (type === "replace") {
-      this.setState({
-        history: history.concat({ operation: value })
-      });
+      newHistoryValue = history.concat({ operation: value });
     } else {
       console.error(
         "Plis use one of the 3 options we have! - delete - update - replace"
       );
     }
+
+    this.setState({
+      history: newHistoryValue
+    });
   }
 
-  async getResult() {
-    try {
-      const response = await Axios.get(
-        `http://api.mathjs.org/v4/?expr=${UrlEncode(
-          this.state.history[this.state.history.length - 1].operation,
-          "gbk"
-        )}`
-      );
-      this.setOperation(response.data, "replace");
-      console.log(response);
-    } catch (error) {
-      this.setOperation("ERROR");
-      console.error(error);
-    }
+  getResult() {
+    Axios.get(
+      `http://api.mathjs.org/v4/?expr=${UrlEncode(
+        this.state.history[this.state.history.length - 1].operation,
+        "gbk"
+      )}`
+    )
+      .then(response => {
+        this.setOperation(response.data, "replace");
+      })
+      .catch(err => {
+        this.setOperation("SYNTAX ERROR!!", "replace");
+      });
   }
 
   handleOnClick(value) {
     if (value === "<==") {
       this.setOperation(null, "delete");
-      console.log("Delete!");
     } else if (value === "=") {
       this.getResult();
     } else {
