@@ -1,0 +1,1 @@
+{"version":3,"sources":["index.css"],"names":[],"mappings":"AAAA,aACE,UAAW,CACX,WAAY,CACZ,cAAe,CACf,iBACF","file":"main.9e969a35.chunk.css","sourcesContent":[".calcButtons {\n  width: 100%;\n  height: 100%;\n  margin-top: 20%;\n  margin-bottom: 20%;\n}\n"]}
